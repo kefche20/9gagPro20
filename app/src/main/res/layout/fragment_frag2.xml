@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/colorAccent">
 
-    <Button
-        android:id="@+id/btn_frag_2"
-        android:layout_height="wrap_content"
-        android:text="Second page"
-        android:layout_width="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rec_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>

@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,10 +16,14 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.List;
+
 import e.kefch_000.a9gagpro20.fragments.Frag2;
 import e.kefch_000.a9gagpro20.fragments.Frag3;
 import e.kefch_000.a9gagpro20.fragments.Frag4;
 import e.kefch_000.a9gagpro20.fragmentsRunner.TimelineFragment;
+import e.kefch_000.a9gagpro20.postsRunner.Post;
+import e.kefch_000.a9gagpro20.postsRunner.PostsDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,10 +38,24 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         setupToolbar();
         setupBottomNavigation();
-    }
+      //  doRecycler();
 
+
+    }
+    private void doRecycler() {
+        //     ButterKnife.bind(this, view)
+        RecyclerView recyclerView =findViewById(R.id.rec_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Post> data = PostsDatabase.getDatabase();
+        PostsAdapter adapter = new PostsAdapter(data);
+        //     Intent startNewActivityOpen = new Intent(getActivity(), CommentsViewActivity.class);
+
+        recyclerView.setAdapter(adapter);
+
+    }
     private void setupToolbar() {
-        setSupportActionBar(toolbar);
+     //   setSupportActionBar(toolbar);
+
     }
 
     @Override

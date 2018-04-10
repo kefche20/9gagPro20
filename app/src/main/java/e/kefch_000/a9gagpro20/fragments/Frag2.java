@@ -9,15 +9,12 @@ import android.view.ViewGroup;
 
 import e.kefch_000.a9gagpro20.R;
 
-/**
- * Created by kefch_000 on 4/7/2018.
- */
-
 public class Frag2 extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_frag2, container, false);
         return view;
     }
