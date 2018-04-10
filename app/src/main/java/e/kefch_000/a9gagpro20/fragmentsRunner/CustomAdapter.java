@@ -55,7 +55,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    @Override
+   @Override
     public int getItemCount() {
-        return mDataSet.length;
+        if(mDataSet != null) {
+            return mDataSet.length;
+        }
+        else
+        {
+            return 0;
+        }
     } }

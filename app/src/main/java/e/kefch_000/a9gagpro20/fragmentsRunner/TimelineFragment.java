@@ -85,7 +85,7 @@ public void onCreate(Bundle savedInstanceState)
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rec_view);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
-
+//TODO: onViewCreated 
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
         if (savedInstanceState != null) {
@@ -112,8 +112,6 @@ public void onCreate(Bundle savedInstanceState)
 
     public void setupTabs() {
         TimelinePagerAdapter adapter = new TimelinePagerAdapter(getContext(), getChildFragmentManager());
-        binding.viewpager.setAdapter(adapter);
-        binding.grpTabs.setupWithViewPager(binding.viewpager);
     }
     private void initDataset() {
         mDataset = new String[DATASET_COUNT];
