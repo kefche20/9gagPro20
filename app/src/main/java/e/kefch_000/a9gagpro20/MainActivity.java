@@ -21,7 +21,7 @@ import java.util.List;
 import e.kefch_000.a9gagpro20.fragments.Frag2;
 import e.kefch_000.a9gagpro20.fragments.Frag3;
 import e.kefch_000.a9gagpro20.fragments.Frag4;
-import e.kefch_000.a9gagpro20.fragmentsRunner.TimelineFragment;
+import e.kefch_000.a9gagpro20.fragments.TimelineFragment;
 import e.kefch_000.a9gagpro20.postsRunner.Post;
 import e.kefch_000.a9gagpro20.postsRunner.PostsDatabase;
 

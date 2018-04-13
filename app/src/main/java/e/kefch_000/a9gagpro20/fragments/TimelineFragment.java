@@ -1,4 +1,4 @@
-package e.kefch_000.a9gagpro20.fragmentsRunner;
+package e.kefch_000.a9gagpro20.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,12 +7,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import e.kefch_000.a9gagpro20.PostsAdapter;
 import e.kefch_000.a9gagpro20.R;
 import e.kefch_000.a9gagpro20.databinding.FragmentTimelineBinding;
+import e.kefch_000.a9gagpro20.fragmentsRunner.CustomAdapter;
+import e.kefch_000.a9gagpro20.fragmentsRunner.TimelinePagerAdapter;
+import e.kefch_000.a9gagpro20.postsRunner.Post;
+import e.kefch_000.a9gagpro20.postsRunner.PostsDatabase;
 
 public class TimelineFragment extends Fragment {
 
@@ -55,25 +63,25 @@ public void onCreate(Bundle savedInstanceState)
             scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();
         }
+        if (layoutManagerType != null) {
+            switch (layoutManagerType) {
+                case GRID_LAYOUT_MANAGER:
+                    mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                    mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                    break;
+                case LINEAR_LAYOUT_MANAGER:
+                    mLayoutManager = new LinearLayoutManager(getActivity());
+                    mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                    break;
+                default:
+                    mLayoutManager = new LinearLayoutManager(getActivity());
+                    mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            }
 
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.scrollToPosition(scrollPosition);
         }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
-
 
     @Nullable
     @Override
@@ -82,10 +90,9 @@ public void onCreate(Bundle savedInstanceState)
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
         rootView.setTag(TAG);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rec_view);
+        mRecyclerView = rootView.findViewById(R.id.rec_view);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
-//TODO: onViewCreated 
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
         if (savedInstanceState != null) {
@@ -93,19 +100,54 @@ public void onCreate(Bundle savedInstanceState)
             mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+        try {
+            setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+        } catch (NullPointerException e) {
+            Log.e("TAG", "Current Layout Manager Type is null", e);
+        } finally {
+            if (mCurrentLayoutManagerType != null) {
+                setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+            }
+            RecyclerView recyclerView = rootView.findViewById(R.id.rec_view);
 
-        mAdapter = new CustomAdapter(mDataset);
-        // Set CustomAdapter as the adapter for RecyclerView.
-        mRecyclerView.setAdapter(mAdapter);
+
+            try {
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            } catch (NullPointerException e) {
+                Log.e("TAG", "Current Layout Manager Type is null", e);
+            } finally {
+                if (new LinearLayoutManager(getActivity()) != null && recyclerView != null) {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                }
+
+            }
 
 
-        return rootView;
+            List<Post> data = PostsDatabase.getDatabase();
+            PostsAdapter adapter = new PostsAdapter(data);
+            if (recyclerView != null) {
+                recyclerView.setAdapter(adapter);
+            }
 
+
+            mAdapter = new CustomAdapter(mDataset);
+            // Set CustomAdapter as the adapter for RecyclerView.
+            mRecyclerView.setAdapter(mAdapter);
+
+
+            return rootView;
+
+        }
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save currently selected layout manager.
+        savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
+        super.onSaveInstanceState(savedInstanceState);
+    }
     @Override
     public void onResume() {
+
         super.onResume();
         setupTabs();
     }
